@@ -22,10 +22,13 @@ import androidx.core.net.toUri
 import androidx.work.*
 import coil.compose.rememberImagePainter
 import com.artemissoftware.herculesworkmanager.data.ColorFilterWorker
+import com.artemissoftware.herculesworkmanager.data.Demonstration
 import com.artemissoftware.herculesworkmanager.data.DownloadWorker
 import com.artemissoftware.herculesworkmanager.ui.theme.HerculesWorkManagerTheme
 import com.artemissoftware.herculesworkmanager.util.WorkerKeys
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +44,12 @@ class MainActivity : ComponentActivity() {
         val colorFilterRequest = OneTimeWorkRequestBuilder<ColorFilterWorker>()
             .build()
         val workManager = WorkManager.getInstance(applicationContext)
+
+        val demo = Demonstration(workManager)
+        demo.demo()
         setContent {
             HerculesWorkManagerTheme {
+
                 val workInfos = workManager
                     .getWorkInfosForUniqueWorkLiveData("download")
                     .observeAsState()
